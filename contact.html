@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .contact-container {
+            display: grid;
+            grid-template-columns: 0.7fr 1.5fr;
+            gap: 40px;
+            align-items: stretch;
+            margin: 1.2rem 1rem;
+            font-size: 14px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            background: var(--primary);
+            border-radius: 40px;
+            padding: 1.1rem 2rem;
+            gap: 15px;
+            height: 100%;
+            width: auto;
+            object-fit: cover;
+        }
+
+        .contact-image {
+            display: flex;
+            flex-direction: column;
+            background: var(--primary);
+            border-radius: 40px;
+            padding: 1.1rem 2rem;
+            overflow: hidden;
+            height: 350px;
+        }
+
+        .contact-image img {
+            width: 100%;
+            height: 100%;
+            padding: 1.1rem 2rem;
+            /* display: block; */
+            object-fit: cover;
+
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <img src="images/GE_Logo-inline-on-white.png" alt="Gelos Enterprises Logo" class="logo">
+
+        <!-- Menu with links -->
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tasks.html" class="active">Tasks</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Section -->
+    <main>
+        <!-- Title and Subtitle -->
+        <div class="main-titles">
+            <h1>Task Manager System</h1>
+            <h2>Please send us a message</h2>
+        </div>
+
+        <!-- Send Message and Image Container -->
+        <div class="contact-container">
+            <!-- Contact Form -->
+            <form action="GET" class="contact-form">
+                <label for="firstName">First Name</label>
+                <input type="text" name="firstName" id="firstName">
+                <label for="lastName">Last Name</label>
+                <input type="text" name="lastName" id="lastName">
+                <label for="email">Contact Email</label>
+                <input type="email" name="email" id="email">
+                <label for="comment">Comment</label>
+                <textarea name="comment" id="comment"></textarea>
+                <button>Send Message</button>
+            </form>
+
+            <div class="contact-image">
+                <!-- Right Side Image -->
+                <img src="images/AdobeStock_324337682.jpeg" alt="Image Business Meeting">
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <!-- Fotter Policy Links -->
+        <ul>
+            <li><a href="policy/GE_Privacy-policy.pdf" download>Privacy Policy</a></li>
+            <li><a href="">|</a></li>
+            <li><a href="policy/GE_Internet-usage-policy.pdf" download>Internet Usage Policy</a></li>
+        </ul>
+    </footer>
+</body>
+
+</html>

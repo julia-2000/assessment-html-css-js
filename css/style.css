@@ -1,0 +1,164 @@
+  :root {
+            --primary: hsl(193, 91%, 31%, 0.8);
+            --secondary: hsl(36, 65%, 62%, 0.65);
+            --third: hsl(223, 12%, 29%, 0.8);
+            --bronze:  hsl(32, 24%, 51%);
+            --gold: hsl(36, 65%, 62%);
+            --blue:  hsl(193, 91%, 31%) ;
+            --blueTint: hsl(198, 25%, 66%);
+            --charcoal: hsl(223, 12%, 29%) ;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            /* flex: 1; */
+            /* Bakcground settings */
+            background: linear-gradient(135deg, var(--third)), url("/images/AdobeStock_251298381.jpeg");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* HOME PAGE */
+        /* .hero {
+            background: linear-gradient(135deg, var(--third)), url("/images/AdobeStock_1178485938.jpeg");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        } */
+
+        /* HEARED */
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 40px;
+            margin: 1.2rem 1rem;
+            background-color: var(--primary);
+            padding: 1.1rem 1.8rem;
+        }
+
+        /* LOGO */
+        .logo {
+            width: 220px;
+            height: auto;
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        /* NAVIGATION MENU */
+        ul {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            list-style: none;
+        }
+
+        /* NAVIGATION LINKS */
+        a {
+            text-decoration: none;
+            color: var(--bronze);
+            font-weight: bolder;
+            font-size: 18px;
+        }
+
+        a:hover {
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+
+        /* MAIN SECTION */
+        main {
+            color: white;
+            height: calc(100vh - 370px);
+            flex:1
+
+        }
+
+        .main-titles {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* CARDS SECTION */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            align-items: center;
+            margin: 1.2rem 1rem;
+            font-size: 14px;
+            
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--primary);
+            border-radius: 40px;
+            padding: 1.1rem 2rem;
+            gap: 15px;
+            height: 100%;
+        }
+
+        .top {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .description {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .description ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 5px;
+            list-style: square;
+            font-size: 14px;
+        }
+
+        /* ICON */
+        .icon {
+            width: 50px;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+
+
+        /* FOOTER */
+        footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            border-radius: 40px;
+            margin: 1.2rem 1rem;
+            background-color: var(--primary);
+            padding: 1.1rem 2rem;
+        }
