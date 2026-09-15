@@ -1,20 +1,21 @@
-// ===================================
-// Assign variables for the form input
-// ===================================
+// =============================================
+// 1. Assign variables for the Add New Task Form
+// =============================================
 let taskNameInput = document.getElementById("taskName");
 let priorityLevelInput = document.getElementById("priorityLevel");
 let dueDateInput = document.getElementById("dueDate");
 let consultantInput = document.getElementById("consultant");
 let btnAddNewTask = document.getElementById("btnAddNewTask");
+// Reference to the Tasks Table Body
 let tasksTableBody = document.getElementById("tasksTableBody");
 
+
 // =======================================================
-// Add Event Listener Function for the Add New Task button
+// 2. Add Event Listener Function for the Add New Task button
 // =======================================================
 btnAddNewTask.addEventListener("click", function () {
 
     // Assign input values to the variables
-    let taskCounter;
     let taskName = taskNameInput.value.trim();
     let priorityLevel = priorityLevelInput.value;
     let dueDate = dueDateInput.value;
@@ -28,61 +29,56 @@ btnAddNewTask.addEventListener("click", function () {
     }
 
     // 
-    let newTask = { taskCounter: taskCounter, taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant };
-    insertFunction(displayTasksTable, 0, newTask);
+    let newTask = { taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant };
+    insertAlgorithm(displayTasksTable, 0, newTask);
     console.log(displayTasksTable);
 
     // Clear form input
-    taskCounter = 0;
     taskNameInput.value = "";
     dueDateInput.value = "";
     priorityLevelInput = "default";
     consultantInput = "default";
 
-    // updateDisplay();
+    updateDisplay();
 });
 
 
 
 /**
- * Function Update Display of the Table
- * @returns - nothing
+ * 3. Function Update Display of the Tasks Table
+ * @returns - nothing if task body is null
  */
 function updateDisplay() {
     if (!tasksTableBody) return; // If tasksTableBody is null, then do nothing!
 
     tasksTableBody.innerHTML = "";
 
-    // Updates Table with New Task
+    // Updates Table Body with the New Task
     for (let i = 0; i < displayTasksTable.length; i++) {
         let item = displayTasksTable[i];
+
+        // Create table row
         let tr = document.createElement("tr");
 
-
-        // Task Counter
-        let tdTaskCounter = document.createElement("td");
-        // tdTaskCounter.innerText = item.taskCounter;
-        tr.appendChild(tdTaskCounter);
-
-        // Task Name
+        // 1. Task Name
         let tdTaskName = document.createElement("td");
         tdTaskName.innerText = item.taskName;
         // Appending data to the table row
         tr.appendChild(tdTaskName);
 
-        // Priority Level
+        // 2. Priority Level
         let tdPriorityLevel = document.createElement("td");
         tdPriorityLevel.innerText = item.priorityLevel;
         // Appending data to the table row
         tr.appendChild(tdPriorityLevel);
 
-        // Due Date
+        // 3. Due Date
         let tdDueDate = document.createElement("td");
         tdDueDate.innerText = item.dueDate;
         // Appending data to the table row
         tr.appendChild(tdDueDate);
 
-        // Consultant
+        // 4. Consultant
         let tdConsultant = document.createElement("td");
         tdConsultant.innerText = item.consultant;
         // Appending data to the table row
@@ -94,24 +90,25 @@ function updateDisplay() {
         let btnComplete = document.createElement("button");
 
 
-        // Delete button
+        // Actions Column - Delete Button
         btnDelete.innerText = "Delete";
         btnDelete.className = "badge-delete";
         btnDelete.setAttribute("data-index", i);
         btnDelete.addEventListener("click", function () {
-            deleteAlgoritm(displayTasksTable, i);
+            deleteAlgorithm(displayTasksTable, i);
             updateDisplay();
         });
         tdActions.appendChild(btnDelete);
         tr.appendChild(tdActions);
 
 
-        // Mark as Completed Button
+        // Actions Column - Mark as Complete Button
         btnComplete.innerText = "Complete";
         btnComplete.className = "badge-complete";
         btnComplete.setAttribute("data-index", i);
         btnComplete.addEventListener("click", function () {
-            markCompleteAlgoritm(displayTasksTable, i);
+            markCompleteAlgorithm(displayTasksTable, i);
+
             updateDisplay();
         });
         tdActions.appendChild(btnComplete);
@@ -124,11 +121,13 @@ function updateDisplay() {
 };
 
 
-// ============================================================
-// Function Insert New Task into Existing Array
-// ============================================================
-function insertFunction(array, index, value) {
-    console.log("insert");
+/**
+ * 4. Function Insert New Task into Existing Array
+ * @param {Array} array - the current array of the tasks
+ * @param {number} index - location the new task will be added
+ * @param {object} value - task value itself
+ */
+function insertAlgorithm(array, index, value) {
     // Creating new array item index and shifting all elements to the right
     for (let i = array.length; i > index; i--) {
         array[i] = array[i - 1];
@@ -138,11 +137,41 @@ function insertFunction(array, index, value) {
 };
 
 
+/**
+ * 
+ * @param {Array} array - the selected array of the tasks
+ * @param {number} index - the index of the item to be deleted
+ */
+function deleteAlgorithm(array, index) {
+    // Shifting elements to the left 
+    for (let i = index; i < array.length; i++) {
+        array[i] = array[i + 1];
+    }
+    array.length--;
+};
+
+
+// Query - what looking for
+/**
+ * 
+ * @param {*} array 
+ * @param {*} query 
+ * @returns 
+ */
+function sequentialSearch(array, query) {
+    // return array.includes(query);
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === query) {
+            return query;
+        }
+    }
+};
+
 
 // ============================================================
 // Function Insert New Task into Existing Array
 // ============================================================
-function markCompleteAlgoritm() {
+function markCompleteAlgorithm() {
 
 }
 
@@ -173,12 +202,12 @@ let roles = [
 ];
 console.log(roles);
 
-// Array of the Tasks
+// Prefilled Array of Tasks
 let displayTasksTable = [
     { taskName: "Meetting", priorityLevel: "Heigh", dueDate: "18/09/2026", consultant: "Alice Jonhson" },
     { taskName: "Draft of Requirements Report", priorityLevel: "Heigh", dueDate: "28/09/2026", consultant: "Alice Jonhson" },
     { taskName: "Update Headings style", priorityLevel: "Medium", dueDate: "30/09/2026", consultant: "Alice Jonhson" }
 ];
 
-// Calling Function to display the table
+// Initial Call on Page Load
 updateDisplay();
