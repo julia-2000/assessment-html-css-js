@@ -1,0 +1,25 @@
+{
+  "name": "assessment-html-css",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "jsdoc js/script.js -d docs/jsdoc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julia-2000/assessment-html-css-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/julia-2000/assessment-html-css-js/issues"
+  },
+  "homepage": "https://github.com/julia-2000/assessment-html-css-js#readme",
+  "dependencies": {
+    "jsdoc": "^4.0.5"
+  }
+}
