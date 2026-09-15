@@ -6,8 +6,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasks</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
 
+    <style>
+        :root {
+            --primary: hsl(193, 91%, 31%, 0.8);
+            --secondary: hsl(36, 65%, 62%, 0.65);
+            --third: hsl(223, 12%, 29%, 0.8);
+            --bronze: hsl(32, 24%, 51%);
+            --gold: hsl(36, 65%, 62%);
+            --blue: hsl(193, 91%, 31%);
+            --blueTint: hsl(198, 25%, 66%);
+            --charcoal: hsl(223, 12%, 29%);
+        }
+
+        .tasks-container {
+            display: grid;
+            grid-template-columns: 0.7fr 1.5fr;
+            gap: 40px;
+            align-items: stretch;
+            margin: 1.2rem 1rem;
+            font-size: 14px;
+        }
+
+        .add-task {
+            display: flex;
+            flex-direction: column;
+            background: var(--primary);
+            border-radius: 40px;
+            padding: 1.1rem 2rem;
+            gap: 10px 0px;
+            height: 100%;
+            width: auto;
+            object-fit: cover;
+            /* opacity: 0.7; */
+
+            /* Icon and Title */
+            .top-task {
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                align-items: center;
+                /* padding: 1.1rem 2rem 0.5rem 2rem; */
+                gap: 5px 15px;
+            }
+        }
+
+        /* ADD NEW TASK FORM */
+        .add-task-form {
+            display: flex;
+            flex-direction: column;
+            background: var(--primary);
+            border-radius: 40px;
+            /* padding: 0rem 2rem 1.1rem 2rem; */
+            gap: 7px 0px;
+            height: 100%;
+            width: auto;
+            object-fit: cover;
+
+            /* PLUS ICON */
+            .plus-icon {
+                width: 12px;
+                height: auto;
+                filter: brightness(1) invert(0);
+            }
+
+        }
+
+        input,
+        select {
+            padding: 7px 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .search-display-container {
+            display: flex;
+            flex-direction: column;
+            background: var(--primary);
+            border-radius: 40px;
+            /* padding: 1.1rem 2rem; */
+            height: 100%;
+            width: auto;
+            object-fit: cover;
+            /* opacity: 0.7; */
+        }
+
+        .search-tasks,
+        .display-tasks {
+            display: flex;
+            flex-direction: column;
+            padding: 1.1rem 2rem;
+            gap: 10px 0px;
+            width: auto;
+
+            .top-task {
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                align-items: center;
+                gap: 5px 15px;
+            }
+        }
+
+        .search-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: auto;
+            background-color: white;
+            /* opacity: 0.5; */
+            padding: 7px;
+            border-radius: 12px;
+        }
+
+        .input-box {
+            border: none;
+            outline: none;
+        }
+
+        /* SEARCH ICON */
+        .search-icon {
+            width: 25px;
+            height: auto;
+            filter: brightness(0) invert(0.6);
+        }
+
+        /* ICON */
+        .icon {
+            width: 30px;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        /*  TABLE */
+        .table-container {
+            background-color: white;
+            /* opacity: 0.5; */
+            color: black;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        th,
+        td {
+            padding: 5px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        tr {
+            border-bottom: 1px solid var(--charcoal);
+        }
+
+
+        /* BUTTONS & BADGES */
+        .btn-add {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            border-radius: 5px;
+            padding: 7px 12px;
+            margin: 20px 0px;
+        }
+
+
+        .badge-delete {
+            display: inline-block;
+            background-color: #941a1d;
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 5px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .badge-delete:hover {
+            background-color: #701315;
+        }
+
+        .badge-complete {
+            display: inline-block;
+            background-color: var(--charcoal);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 5px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .badge-complete:hover {
+            background-color: var(--charcoal);
+            opacity: 0.5;
+        }
     </style>
 </head>
 
@@ -26,6 +228,7 @@
         </nav>
     </header>
 
+    <!-- Contant -->
     <main>
         <!-- Title and Subtitle -->
         <div class="main-titles">
@@ -34,47 +237,98 @@
         </div>
 
         <!-- Cards with instructions -->
-        <div class="task-container">
-            <div class="addTask">
-                <div class="top">
+        <div class="tasks-container">
+            <div class="add-task">
+
+                <!-- Icon and Title -->
+                <div class="top-task">
                     <img src="images/folder-plus-solid-full.svg" alt="Folder with plus icon" class="icon"></img>
                     <h3>Add New Task</h3>
                 </div>
-                <div class="description">
-                    <p>Create tasks (via a form) with a task
-                        name, due date, priority level (Low, Medium or High) and
-                        optional consultant (enter the exact role from a list).</p>
-                </div>
-            </div>
-            <div class="searchTask">
-                <div class="top">
-                    <img src="images/hamburger-menu.svg" class="icon" alt="Folder with plus icon"></img>
-                    <h3>Display Tasks</h3>
-                </div>
-                <div class="description">
-                    <p>Tasks are listed, including name, due date,
-                        priority level and consultant. Each task includes controls to
-                        either complete or delete it:
-                    </p>
-                    <ul>
-                        <li>Complete task: Select the control to mark tasks as
-                            complete. The task will remain visible with
-                            strikethrough formatting.</li>
-                        <li>Delete task: Select the control to remove tasks no
-                            longer needed.</li>
-                    </ul>
+
+                <!-- Add New Task Form -->
+                <div class="add-task-form">
+                    <label for="taskName">Task Name *</label>
+                    <input type="text" name="taskName" id="taskName" placeholder="Enter task name">
+                    <label for="priorityLevel">Priority Level *</label>
+                    <select type="text" name="priorityLevel" id="priorityLevel">
+                        <option value="default">Select priority</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <label for="dueDate">Due Date *</label>
+                    <input type="date" name="dueDate" id="dueDate">
+                    <label for="consultant">Consultant</label>
+                    <select name="consultant" id="consultant">
+                        <option value="default" selected="selected">Please select an option</option>
+                        <br>
+                        <option value="accountsClerk">Accounts Clerk (Payable)</option>
+                        <br>
+                        <option value="administrationAssistant">Administration Assistant</option>
+                        <br>
+                        <option value="brandCoordinator">Brand Coordinator</option>
+                        <br>
+                        <option value="callCentreManager">Call Centre Manager</option>
+                        <br>
+                        <option value="cyberSecurityEngineer">Cyber Security Engineer</option>
+                        <br>
+                    </select>
+                    <button class="btn-add" id="btnAddNewTask">
+                        <img src="images/plus.png" alt="Plus icon" class="plus-icon">
+                        Add Task</button>
                 </div>
             </div>
 
-            <div class="display">
-                <div class="top">
-                    <img src="images/search-glass-solid-full.svg" class="icon" alt="Folder with plus icon"></img>
-                    <h3>Search Tasks</h3>
+            <div class="search-display-container">
+
+                <!-- Search Tasks -->
+                <div class="search-tasks">
+
+                    <!-- Icon and Title -->
+                    <div class="top-task">
+                        <img src="images/search-glass-solid-full.svg" class="icon" alt="Folder with plus icon"></img>
+                        <h3>Search Tasks</h3>
+                    </div>
+
+                    <!-- Search Container -->
+                    <div class="search-container">
+                        <input type="text" class="input-box" id="search" name="search" placeholder="Search..."
+                            aria-label="Search through site content">
+                        <img src="images/search-glass-solid-full.svg" class="search-icon" alt="Folder with plus icon">
+                        </img>
+
+                    </div>
+
                 </div>
-                <div class="description">
-                    <p>Look up tasks by typing the exact task
-                        name to display results or the message ‘Task not found’.</p>
+
+                <!-- Display Tasks -->
+                <div class="display-tasks">
+                    <!-- Icon and Title -->
+                    <div class="top-task">
+                        <img src="images/hamburger-menu.svg" class="icon" alt="Folder with plus icon"></img>
+                        <h3>Display Tasks</h3>
+                    </div>
+                    <!-- Table Container -->
+                    <div class="table-container">
+                        <table id="">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Task Name</th>
+                                    <th>Due Date</th>
+                                    <th>Priority</th>
+                                    <th>Consultant</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasksTableBody">
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -90,6 +344,8 @@
             <li><a href="policy/GE_Internet-usage-policy.pdf" download>Internet Usage Policy</a></li>
         </ul>
     </footer>
+
+    <script src="js/script.js"></script>
 </body>
 
 </html>
