@@ -6,6 +6,7 @@ let priorityLevelInput = document.getElementById("priorityLevel");
 let dueDateInput = document.getElementById("dueDate");
 let consultantInput = document.getElementById("consultant");
 let btnAddNewTask = document.getElementById("btnAddNewTask");
+
 // Reference to the Tasks Table Body
 let tasksTableBody = document.getElementById("tasksTableBody");
 
@@ -31,13 +32,13 @@ btnAddNewTask.addEventListener("click", function () {
     // 
     let newTask = { taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant };
     insertAlgorithm(displayTasksTable, 0, newTask);
-    console.log(displayTasksTable);
+    // console.log(displayTasksTable);
 
     // Clear form input
     taskNameInput.value = "";
     dueDateInput.value = "";
-    priorityLevelInput = "default";
-    consultantInput = "default";
+    priorityLevelInput.value = "default";
+    consultantInput.value = "default";
 
     updateDisplay();
 });
@@ -49,76 +50,83 @@ btnAddNewTask.addEventListener("click", function () {
  * @returns - nothing if task body is null
  */
 function updateDisplay() {
-    if (!tasksTableBody) return; // If tasksTableBody is null, then do nothing!
+    // If tasksTableBody is null, then do nothing!
+    if (!tasksTableBody) return; 
 
+    // Clear current contents to prevent duplicates
     tasksTableBody.innerHTML = "";
 
-    // Updates Table Body with the New Task
+    // Iterate through cart array and append generated DOM elements
     for (let i = 0; i < displayTasksTable.length; i++) {
-        let item = displayTasksTable[i];
-
-        // Create table row
-        let tr = document.createElement("tr");
-
-        // 1. Task Name
-        let tdTaskName = document.createElement("td");
-        tdTaskName.innerText = item.taskName;
-        // Appending data to the table row
-        tr.appendChild(tdTaskName);
-
-        // 2. Priority Level
-        let tdPriorityLevel = document.createElement("td");
-        tdPriorityLevel.innerText = item.priorityLevel;
-        // Appending data to the table row
-        tr.appendChild(tdPriorityLevel);
-
-        // 3. Due Date
-        let tdDueDate = document.createElement("td");
-        tdDueDate.innerText = item.dueDate;
-        // Appending data to the table row
-        tr.appendChild(tdDueDate);
-
-        // 4. Consultant
-        let tdConsultant = document.createElement("td");
-        tdConsultant.innerText = item.consultant;
-        // Appending data to the table row
-        tr.appendChild(tdConsultant);
-
-        // Actions Buttons
-        let tdActions = document.createElement("td");
-        let btnDelete = document.createElement("button");
-        let btnComplete = document.createElement("button");
-
-
-        // Actions Column - Delete Button
-        btnDelete.innerText = "Delete";
-        btnDelete.className = "badge-delete";
-        btnDelete.setAttribute("data-index", i);
-        btnDelete.addEventListener("click", function () {
-            deleteAlgorithm(displayTasksTable, i);
-            updateDisplay();
-        });
-        tdActions.appendChild(btnDelete);
-        tr.appendChild(tdActions);
-
-
-        // Actions Column - Mark as Complete Button
-        btnComplete.innerText = "Complete";
-        btnComplete.className = "badge-complete";
-        btnComplete.setAttribute("data-index", i);
-        btnComplete.addEventListener("click", function () {
-            markCompleteAlgorithm(displayTasksTable, i);
-
-            updateDisplay();
-        });
-        tdActions.appendChild(btnComplete);
-        tr.appendChild(tdActions);
-
-
-        // Appending row to the table
-        tasksTableBody.appendChild(tr);
+       tasksTableBody.appendChild(createTaskRow(i));
     }
 };
+
+
+// Helper Function to Generate a Single Table Row Node
+function createTaskRow(index){
+    let item = displayTasksTable[index];
+
+    // Create table row
+    let tr = document.createElement("tr");
+
+    // 1. Task Name
+    let tdTaskName = document.createElement("td");
+    tdTaskName.innerText = item.taskName;
+    // Appending data to the table row
+    tr.appendChild(tdTaskName);
+
+    // 2. Priority Level
+    let tdPriorityLevel = document.createElement("td");
+    tdPriorityLevel.innerText = item.priorityLevel;
+    // Appending data to the table row
+    tr.appendChild(tdPriorityLevel);
+
+    // 3. Due Date
+    let tdDueDate = document.createElement("td");
+    tdDueDate.innerText = item.dueDate;
+    // Appending data to the table row
+    tr.appendChild(tdDueDate);
+
+    // 4. Consultant
+    let tdConsultant = document.createElement("td");
+    tdConsultant.innerText = item.consultant;
+    // Appending data to the table row
+    tr.appendChild(tdConsultant);
+
+    // Actions Buttons
+    let tdActions = document.createElement("td");
+    let btnDelete = document.createElement("button");
+    let btnComplete = document.createElement("button");
+
+
+    // Actions Column - Delete Button
+    btnDelete.innerText = "Delete";
+    btnDelete.className = "badge-delete";
+    btnDelete.setAttribute("data-index", index);
+    // On the press of Delete button - remove task
+    btnDelete.addEventListener("click", function () {
+        deleteAlgorithm(displayTasksTable, index);
+        updateDisplay();
+    });
+    tdActions.appendChild(btnDelete);
+    tr.appendChild(tdActions);
+
+
+    // Actions Column - Mark as Complete Button
+    btnComplete.innerText = "Complete";
+    btnComplete.className = "badge-complete";
+    btnComplete.setAttribute("data-index", index);
+    // On the click of the Complete Button - add striketrough line on the selected task
+    btnComplete.addEventListener("click", function () {
+        tr.style.textDecoration = "line-through";
+        tr.style.color = "green";
+    });
+    tdActions.appendChild(btnComplete);
+    tr.appendChild(tdActions);
+
+    return tr;
+}
 
 
 /**
@@ -128,12 +136,12 @@ function updateDisplay() {
  * @param {object} value - task value itself
  */
 function insertAlgorithm(array, index, value) {
-    // Creating new array item index and shifting all elements to the right
-    for (let i = array.length; i > index; i--) {
+// Creating new array item index and shifting all elements to the right
+for (let i = array.length; i > index; i--) {
         array[i] = array[i - 1];
-        // Adding new value to the array
-        array[index] = value;
     }
+    // Adding new task to the array of the selected index
+    array[index] = value;
 };
 
 
@@ -144,37 +152,12 @@ function insertAlgorithm(array, index, value) {
  */
 function deleteAlgorithm(array, index) {
     // Shifting elements to the left 
-    for (let i = index; i < array.length; i++) {
+    for (let i = index; i < array.length-1; i++) {
         array[i] = array[i + 1];
     }
+    // Removing the last element of the array
     array.length--;
 };
-
-
-// Query - what looking for
-/**
- * 
- * @param {*} array 
- * @param {*} query 
- * @returns 
- */
-function sequentialSearch(array, query) {
-    // return array.includes(query);
-    for (let i = 0; i < array.length; i++) {
-        if (array[i] === query) {
-            return query;
-        }
-    }
-};
-
-
-// ============================================================
-// Function Insert New Task into Existing Array
-// ============================================================
-function markCompleteAlgorithm() {
-
-}
-
 
 
 // Array of Roles
@@ -201,6 +184,7 @@ let roles = [
     }
 ];
 console.log(roles);
+
 
 // Prefilled Array of Tasks
 let displayTasksTable = [
