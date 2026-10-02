@@ -6,14 +6,16 @@ let priorityLevelInput = document.getElementById("priorityLevel");
 let dueDateInput = document.getElementById("dueDate");
 let consultantInput = document.getElementById("consultant");
 let btnAddNewTask = document.getElementById("btnAddNewTask");
-
+let searchInput =  document.getElementById("search");
+let iconSearch = document.getElementById("iconSearch");
+let message = document.getElementById("message");
 // Reference to the Tasks Table Body
 let tasksTableBody = document.getElementById("tasksTableBody");
 
 
-// =======================================================
+// ===========================================================
 // 2. Add Event Listener Function for the Add New Task button
-// =======================================================
+// ===========================================================
 btnAddNewTask.addEventListener("click", function () {
 
     // Assign input values to the variables
@@ -29,24 +31,73 @@ btnAddNewTask.addEventListener("click", function () {
         return;
     }
 
-    // 
-    let newTask = { taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant };
+    // Create New Task object
+    let newTask = { taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant, completed: false };
+    // Insert New Task at the top of the Array at index 0
     insertAlgorithm(displayTasksTable, 0, newTask);
     // console.log(displayTasksTable);
 
-    // Clear form input
+    // Clear input fields after the New Task added to the table
     taskNameInput.value = "";
     dueDateInput.value = "";
     priorityLevelInput.value = "default";
     consultantInput.value = "default";
 
+    // Update table whith additional New Task 
     updateDisplay();
 });
 
 
 
+// ===========================================================
+// 3. Add Event Listener for the Search 
+// ===========================================================
+iconSearch.addEventListener("click", function(){
+
+    // Get the text enetred into the search and trim spaces
+    let search = searchInput.value.trim();
+    // Clear previous messages
+    message.innerHTML = "";
+    
+    // Check if the input text has been entered into search box
+    if (!search) {
+        // Create a new paragraph for the warning message
+        let p = document.createElement("p");
+        // Add text for the message
+        p.innerText = "Please specify search criteria!";
+
+        // Display message on the page
+        message.appendChild(p);
+        // Return will exit the function: will not continue to the next process!
+        return;
+    }
+
+    // Call search function Tasks Table Array and task name
+    // Function returns index of the matching task or -1 which means that task was not found
+    let result = sequentialSearch(displayTasksTable, search);
+
+    // Check if task was not found 
+    if (result === -1){
+        // Create a new paragraph for error message
+        let p = document.createElement("p");
+        p.innerText = "Task not found.";
+        message.appendChild(p);
+        // Return will exit the function: will not continue to the next process!
+        return;
+    }
+    console.log("Task found: ", result);
+    // Clear current table content
+    tasksTableBody.innerHTML="";
+
+    // Display only the task that was found
+    tasksTableBody.appendChild(createTaskRow(result));
+
+});
+
+
+
 /**
- * 3. Function Update Display of the Tasks Table
+ * Function which is updating display of the table of Tasks
  * @returns - nothing if task body is null
  */
 function updateDisplay() {
@@ -63,34 +114,48 @@ function updateDisplay() {
 };
 
 
-// Helper Function to Generate a Single Table Row Node
+// ======================================================
+/**
+ * Helper Function to Generate a Single Table Row Node
+ * @param {number} index - index of the task in displayTasksTable
+ * @returns {table row} - table row
+ */
 function createTaskRow(index){
+    // Get selected task 
     let item = displayTasksTable[index];
-
     // Create table row
     let tr = document.createElement("tr");
 
-    // 1. Task Name
+    // Check if table row has status Completed
+    if (item.completed === true){
+        // Change style of selected row
+        tr.style.textDecoration = "line-through";
+        tr.style.color = "green";
+    }
+    console.log("Item: ", item);
+
+    // Task Name
     let tdTaskName = document.createElement("td");
     tdTaskName.innerText = item.taskName;
     // Appending data to the table row
     tr.appendChild(tdTaskName);
 
-    // 2. Priority Level
+    // Priority Level
     let tdPriorityLevel = document.createElement("td");
     tdPriorityLevel.innerText = item.priorityLevel;
     // Appending data to the table row
     tr.appendChild(tdPriorityLevel);
 
-    // 3. Due Date
+    // Due Date
     let tdDueDate = document.createElement("td");
     tdDueDate.innerText = item.dueDate;
     // Appending data to the table row
     tr.appendChild(tdDueDate);
 
-    // 4. Consultant
+    // Consultant
     let tdConsultant = document.createElement("td");
-    tdConsultant.innerText = item.consultant;
+    let consultantName = findConsultant(roles, item.consultant);
+    tdConsultant.innerText = consultantName;
     // Appending data to the table row
     tr.appendChild(tdConsultant);
 
@@ -107,9 +172,12 @@ function createTaskRow(index){
     // On the press of Delete button - remove task
     btnDelete.addEventListener("click", function () {
         deleteAlgorithm(displayTasksTable, index);
+        // Update table
         updateDisplay();
     });
+    // Adding Delete Button to the Actions cell
     tdActions.appendChild(btnDelete);
+    // Appending data to the table row
     tr.appendChild(tdActions);
 
 
@@ -119,18 +187,28 @@ function createTaskRow(index){
     btnComplete.setAttribute("data-index", index);
     // On the click of the Complete Button - add striketrough line on the selected task
     btnComplete.addEventListener("click", function () {
-        tr.style.textDecoration = "line-through";
-        tr.style.color = "green";
+        // If staus is false, 
+        // then switch item completed staus to true and change style
+        if (item.completed === false){
+            item.completed = true;
+        }
+
+        // Rebuild the table using the new status
+        updateDisplay();
     });
+    // Adding Complete Button to the Actions cell
     tdActions.appendChild(btnComplete);
+    // Appending data to the table row
     tr.appendChild(tdActions);
 
+    // Return table row
     return tr;
 }
 
 
+// ======================================================
 /**
- * 4. Function Insert New Task into Existing Array
+ * Function Insert New Task into Existing Array
  * @param {Array} array - the current array of the tasks
  * @param {number} index - location the new task will be added
  * @param {object} value - task value itself
@@ -146,7 +224,7 @@ for (let i = array.length; i > index; i--) {
 
 
 /**
- * 
+ * Function to Delete specified task
  * @param {Array} array - the selected array of the tasks
  * @param {number} index - the index of the item to be deleted
  */
@@ -157,6 +235,66 @@ function deleteAlgorithm(array, index) {
     }
     // Removing the last element of the array
     array.length--;
+};
+
+
+/**
+ * Function to perform sequential search on the task by using task name.
+ * @param {Array} array - the selected array of tasks
+ * @param {string} query - task name
+ * @returns 
+ */
+function sequentialSearch(array, query) {
+    // return array.includes(query);
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].taskName.toLowerCase() === query.toLowerCase()) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+
+/**
+ * Perform binary search on the Consultant roles array 
+ * Find match of Consultant role and retrieve consultant name.
+ * 
+ * @param {Array} arr - sorted array of Consultant roles
+ * @param {string} target - Consultant role being searched for
+ * @returns {string} - name of consultant or "Consultant not found" message
+ */
+function findConsultant(array, target) {
+    if (target === "") return "Consultant is not found";
+
+    let left = 0;
+    let right = array.length - 1;
+    let counter = 0;
+
+    while (left <= right) {
+        counter++;
+
+        // This is middle pointer element for  check
+        const middle = Math.floor((left + right) / 2);
+        const role = array[middle].role.trim().toLowerCase();
+        target = target.trim().toLowerCase();
+
+        console.log("Role ", role);
+        console.log("Target ", target);
+        
+
+        // if middle number is equal of the target element?
+        if (role === target) {
+            return array[middle].name;
+        }
+
+        // If the searching number is less then target element, 
+        // then we checking the middle element pointer
+        if (role < target)
+            left = middle + 1;
+        else
+            right = middle - 1;
+    }
+    return "Consultant is not found";
 };
 
 
@@ -179,18 +317,29 @@ let roles = [
         role: "Call Centre Manager"
     },
     {
+        name: "Mia Johnson",
+        role: "Call Centre Operator"
+    },
+    {
         name: "Abby Jones",
         role: "Cyber Security Engineer"
+    },
+    {
+        name: "Ben Jones",
+        role: "Database Development Team Leader"
+    },
+    {
+        name: "Clara Jones",
+        role: "Digital Media Coordinator"
     }
 ];
-console.log(roles);
 
 
 // Prefilled Array of Tasks
 let displayTasksTable = [
-    { taskName: "Meetting", priorityLevel: "Heigh", dueDate: "18/09/2026", consultant: "Alice Jonhson" },
-    { taskName: "Draft of Requirements Report", priorityLevel: "Heigh", dueDate: "28/09/2026", consultant: "Alice Jonhson" },
-    { taskName: "Update Headings style", priorityLevel: "Medium", dueDate: "30/09/2026", consultant: "Alice Jonhson" }
+    { taskName: "Meeting", priorityLevel: "Heigh", dueDate: "2026-11-01", consultant: "Accounts Clerk (Payable)", completed: false },
+    { taskName: "Draft of Requirements Report", priorityLevel: "High", dueDate: "2026-10-24", consultant: "Administration Assistant", completed: false },
+    { taskName: "Update Headings style", priorityLevel: "Medium", dueDate: "2026-10-04", consultant: "Brand Coordinator", completed: false }
 ];
 
 // Initial Call on Page Load

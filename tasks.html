@@ -253,9 +253,9 @@
                     <label for="priorityLevel">Priority Level *</label>
                     <select type="text" name="priorityLevel" id="priorityLevel">
                         <option value="default">Select priority</option>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
                     </select>
                     <label for="dueDate">Due Date *</label>
                     <input type="date" name="dueDate" id="dueDate">
@@ -263,15 +263,21 @@
                     <select name="consultant" id="consultant">
                         <option value="default" selected="selected">Please select an option</option>
                         <br>
-                        <option value="accountsClerk">Accounts Clerk (Payable)</option>
+                        <option value="Accounts Clerk">Accounts Clerk (Payable)</option>
                         <br>
-                        <option value="administrationAssistant">Administration Assistant</option>
+                        <option value="Administration Assistant">Administration Assistant</option>
                         <br>
-                        <option value="brandCoordinator">Brand Coordinator</option>
+                        <option value="Brand Coordinator">Brand Coordinator</option>
                         <br>
-                        <option value="callCentreManager">Call Centre Manager</option>
+                        <option value="Call Centre Manager">Call Centre Manager</option>
                         <br>
-                        <option value="cyberSecurityEngineer">Cyber Security Engineer</option>
+                        <option value="Call Centre Operator">Call Centre Operator</option>
+                        <br>
+                        <option value="Cyber Security Engineer">Cyber Security Engineer</option>
+                        <br>
+                        <option value="Database Development Team Leader">Database Development Team Leader</option>
+                        <br>
+                        <option value="Digital Media Coordinator">Digital Media Coordinator</option>
                         <br>
                     </select>
                     <button class="btn-add" id="btnAddNewTask">
@@ -295,10 +301,15 @@
                     <div class="search-container">
                         <input type="text" class="input-box" id="search" name="search" placeholder="Search..."
                             aria-label="Search through site content">
-                        <img src="images/search-glass-solid-full.svg" class="search-icon" alt="Folder with plus icon">
+                        <img src="images/search-glass-solid-full.svg" id="iconSearch" class="search-icon"
+                            alt="Folder with plus icon">
                         </img>
+                    </div>
+                    <!-- Message -->
+                    <div id="message">
 
                     </div>
+
 
                 </div>
 
