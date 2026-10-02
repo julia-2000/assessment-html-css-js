@@ -1,138 +1,148 @@
-// =============================================
-// 1. Assign variables for the Add New Task Form
-// =============================================
+// ===========================================================
+// 1. Get HTML elements
+// ===========================================================
+// Form fields
 let taskNameInput = document.getElementById("taskName");
 let priorityLevelInput = document.getElementById("priorityLevel");
 let dueDateInput = document.getElementById("dueDate");
 let consultantInput = document.getElementById("consultant");
+
+// Buttons and search elements
 let btnAddNewTask = document.getElementById("btnAddNewTask");
-let searchInput =  document.getElementById("search");
+let searchInput = document.getElementById("search");
 let iconSearch = document.getElementById("iconSearch");
 let message = document.getElementById("message");
-// Reference to the Tasks Table Body
+
+// Table body where task rows will be displayed
 let tasksTableBody = document.getElementById("tasksTableBody");
 
 
 // ===========================================================
-// 2. Add Event Listener Function for the Add New Task button
+// 2. Add Event Listener for the Add New Task button
 // ===========================================================
 btnAddNewTask.addEventListener("click", function () {
 
-    // Assign input values to the variables
+    // Get values entered by the user
     let taskName = taskNameInput.value.trim();
     let priorityLevel = priorityLevelInput.value;
     let dueDate = dueDateInput.value;
     let consultant = consultantInput.value;
 
-    // Checking if all the input fields have required information
+    // Check that all required fields have been completed
     if (!taskName || priorityLevel === "default" || !dueDate || consultant === "default") {
+        // Send Alert with the warning message
         alert("Invalid input. Please complete required fields.");
-        // Return will exit the function: will not continue to the next process!
+        // Function will stop if any input is invalid
         return;
     }
 
-    // Create New Task object
+    // Create a new task object
     let newTask = { taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant, completed: false };
-    // Insert New Task at the top of the Array at index 0
-    insertAlgorithm(displayTasksTable, 0, newTask);
-    // console.log(displayTasksTable);
+    // Add the new task at the start of the tasks array
+    insertNewTask(displayTasksTable, 0, newTask);
 
-    // Clear input fields after the New Task added to the table
+    // Clear input fields after the new task is added
     taskNameInput.value = "";
     dueDateInput.value = "";
     priorityLevelInput.value = "default";
     consultantInput.value = "default";
 
-    // Update table whith additional New Task 
+    // Refresh the tasks table whith additional a new task 
     updateDisplay();
 });
 
 
 
-// ===========================================================
-// 3. Add Event Listener for the Search 
-// ===========================================================
+// ==================================================================
+// 3. Add Event Listener for the Search of a Task by using Task Name
+// ==================================================================
 iconSearch.addEventListener("click", function(){
 
-    // Get the text enetred into the search and trim spaces
+    // Get the search value of user input and remove spaces
     let search = searchInput.value.trim();
-    // Clear previous messages
+    // Clear any previous messages
     message.innerHTML = "";
     
-    // Check if the input text has been entered into search box
+    // Check if the user entered search criteria
     if (!search) {
-        // Create a new paragraph for the warning message
+        // Create warning message
         let p = document.createElement("p");
-        // Add text for the message
         p.innerText = "Please specify search criteria!";
 
-        // Display message on the page
+        // Display message
         message.appendChild(p);
-        // Return will exit the function: will not continue to the next process!
+        // Stop the function: will not continue to the next process!
         return;
     }
 
-    // Call search function Tasks Table Array and task name
-    // Function returns index of the matching task or -1 which means that task was not found
-    let result = sequentialSearch(displayTasksTable, search);
+    // Search the tasks array by task name
+    // The function returns the index of task if found, otherwise -1
+    let result = searchTask(displayTasksTable, search);
 
-    // Check if task was not found 
+    // Check if no task was found 
     if (result === -1){
-        // Create a new paragraph for error message
+        // Create error message
         let p = document.createElement("p");
         p.innerText = "Task not found.";
+
+        // Display error message
         message.appendChild(p);
-        // Return will exit the function: will not continue to the next process!
+        // Stop function: will not continue to the next process!
         return;
     }
-    console.log("Task found: ", result);
-    // Clear current table content
+    // Display result of the function in consol
+    // console.log("Task found: ", result);
+    // Clear current tasks table content
     tasksTableBody.innerHTML="";
 
     // Display only the task that was found
     tasksTableBody.appendChild(createTaskRow(result));
-
 });
 
 
-
+// ===========================================================
+// 4. Update Display of the Tasks Table
+// ===========================================================
 /**
- * Function which is updating display of the table of Tasks
- * @returns - nothing if task body is null
+ * Rebuilds the Tasks Table using all tasks which currently stored in displayTasksTable.
+ * 
+ * @returns - returns nothing if task body is not exists
  */
 function updateDisplay() {
-    // If tasksTableBody is null, then do nothing!
+    // If the tasksTableBody is null, then function is stop
     if (!tasksTableBody) return; 
 
-    // Clear current contents to prevent duplicates
+    // Clear current rows to prevent duplicates
     tasksTableBody.innerHTML = "";
 
-    // Iterate through cart array and append generated DOM elements
+    // Iterate through array of tasks and display each of task
     for (let i = 0; i < displayTasksTable.length; i++) {
        tasksTableBody.appendChild(createTaskRow(i));
     }
 };
 
 
-// ======================================================
+// ===========================================================
+// 5. Create One Task Row
+// ===========================================================
 /**
- * Helper Function to Generate a Single Table Row Node
+ * Helper Function which generate a Single Table Row of selected Task.
+ * 
  * @param {number} index - index of the task in displayTasksTable
- * @returns {table row} - table row
+ * @returns {table row} - generated task row
  */
 function createTaskRow(index){
-    // Get selected task 
+    // Get selected task object 
     let item = displayTasksTable[index];
-    // Create table row
+    // Create a new table row
     let tr = document.createElement("tr");
 
-    // Check if table row has status Completed
+    // If the task has been completed is true, then apply specified styling to the selected row
     if (item.completed === true){
-        // Change style of selected row
         tr.style.textDecoration = "line-through";
         tr.style.color = "green";
     }
-    console.log("Item: ", item);
+
 
     // Task Name
     let tdTaskName = document.createElement("td");
@@ -154,151 +164,176 @@ function createTaskRow(index){
 
     // Consultant
     let tdConsultant = document.createElement("td");
+    // Get consultant name by calling findConsultant() function 
+    // which is search for the consultant name by using consultant role
     let consultantName = findConsultant(roles, item.consultant);
     tdConsultant.innerText = consultantName;
     // Appending data to the table row
     tr.appendChild(tdConsultant);
 
-    // Actions Buttons
+    // ===========================================
+    // Actions
     let tdActions = document.createElement("td");
+    // Create Complete and Delete buttons
     let btnDelete = document.createElement("button");
     let btnComplete = document.createElement("button");
 
-
-    // Actions Column - Delete Button
+    // Delete Button
     btnDelete.innerText = "Delete";
     btnDelete.className = "badge-delete";
     btnDelete.setAttribute("data-index", index);
-    // On the press of Delete button - remove task
+    // Delete the selected task when button is clicked
     btnDelete.addEventListener("click", function () {
-        deleteAlgorithm(displayTasksTable, index);
-        // Update table
+        // Remove specified task from array of tasks
+        deleteTask(displayTasksTable, index);
+        // Refresh table after deletion
         updateDisplay();
     });
-    // Adding Delete Button to the Actions cell
+    // Add Delete button to the Actions cell
     tdActions.appendChild(btnDelete);
-    // Appending data to the table row
-    tr.appendChild(tdActions);
 
-
-    // Actions Column - Mark as Complete Button
+    // Complete Button
     btnComplete.innerText = "Complete";
     btnComplete.className = "badge-complete";
     btnComplete.setAttribute("data-index", index);
-    // On the click of the Complete Button - add striketrough line on the selected task
+    // Mark selected task as completed when button is clicked
     btnComplete.addEventListener("click", function () {
-        // If staus is false, 
-        // then switch item completed staus to true and change style
+        // If staus is false, change completed status to true
         if (item.completed === false){
             item.completed = true;
         }
-
-        // Rebuild the table using the new status
+        // Refresh the table using the new status
         updateDisplay();
     });
-    // Adding Complete Button to the Actions cell
+    // Add Complete button to the Actions cell
     tdActions.appendChild(btnComplete);
-    // Appending data to the table row
-    tr.appendChild(tdActions);
 
-    // Return table row
+    // Add Actions cell to the row
+    tr.appendChild(tdActions);
+    // ================================================
+
+    // Return completed table row
     return tr;
 }
 
 
-// ======================================================
+// ===========================================================
+// 6. Insert New Task
+// ===========================================================
 /**
- * Function Insert New Task into Existing Array
- * @param {Array} array - the current array of the tasks
- * @param {number} index - location the new task will be added
- * @param {object} value - task value itself
+ * Insert Function which add a New Task into Existing Array at the selected index.
+ * 
+ * @param {Array} array - current array of the tasks
+ * @param {number} index - position at which the new task will be added
+ * @param {object} value - new task object itself
  */
-function insertAlgorithm(array, index, value) {
-// Creating new array item index and shifting all elements to the right
+function insertNewTask(array, index, value) {
+// Create new array item index and shift all elements to the right
 for (let i = array.length; i > index; i--) {
         array[i] = array[i - 1];
     }
-    // Adding new task to the array of the selected index
+    // Add new task at the selected index
     array[index] = value;
 };
 
-
+// ===========================================================
+// 7. Delete Task
+// ===========================================================
 /**
- * Function to Delete specified task
- * @param {Array} array - the selected array of the tasks
- * @param {number} index - the index of the item to be deleted
+ * Delete Function - delete specified task from selected index.
+ * 
+ * @param {Array} array - selected tasks array
+ * @param {number} index - index of the item to be deleted
  */
-function deleteAlgorithm(array, index) {
-    // Shifting elements to the left 
+function deleteTask(array, index) {
+    // Shift elements to the left 
     for (let i = index; i < array.length-1; i++) {
         array[i] = array[i + 1];
     }
-    // Removing the last element of the array
+    // Remove the last element of the array
     array.length--;
 };
 
 
+// ===========================================================
+// 8. Sequential Search
+// ===========================================================
 /**
  * Function to perform sequential search on the task by using task name.
- * @param {Array} array - the selected array of tasks
- * @param {string} query - task name
- * @returns 
+ * 
+ * @param {Array} array - selected tasks array
+ * @param {string} query - task name selected by user
+ * @returns {number} Index of matching task, or -1 if task not found
  */
-function sequentialSearch(array, query) {
-    // return array.includes(query);
+function searchTask(array, query) {
+    // Loop through each task in the array
     for (let i = 0; i < array.length; i++) {
+        // Check if task names match with user search
         if (array[i].taskName.toLowerCase() === query.toLowerCase()) {
             return i;
         }
     }
+    // Return -1 if no task match found
     return -1;
 };
 
 
+// ===========================================================
+// 9. Binary Search for Consultant
+// ===========================================================
 /**
- * Perform binary search on the Consultant roles array 
- * Find match of Consultant role and retrieve consultant name.
+ * Perform binary search to find a Consultant Role and return consultant name.
  * 
- * @param {Array} arr - sorted array of Consultant roles
- * @param {string} target - Consultant role being searched for
- * @returns {string} - name of consultant or "Consultant not found" message
+ * @param {Array} array - sorted array of consultant roles
+ * @param {string} target - consultant role to search for
+ * @returns {string} - consultant name or "Consultant not found" message
  */
 function findConsultant(array, target) {
+    // Check if user provided role
     if (target === "") return "Consultant is not found";
 
+    // Set the first position of the search
     let left = 0;
+    // Set the last position of the search
     let right = array.length - 1;
+    // Create counter
     let counter = 0;
+    // Trim search value and convert to lower case
+    target = target.trim().toLowerCase();
 
+    // Continue while loop till there are elements at the left
     while (left <= right) {
         counter++;
 
-        // This is middle pointer element for  check
+        // Set middle pointer
         const middle = Math.floor((left + right) / 2);
-        const role = array[middle].role.trim().toLowerCase();
-        target = target.trim().toLowerCase();
 
-        console.log("Role ", role);
-        console.log("Target ", target);
+        // Get the role stored at the middle position, trim spaces, convert to lower case
+        const role = array[middle].role.trim().toLowerCase();
         
 
-        // if middle number is equal of the target element?
+        // Check if the middle role matches the target role?
         if (role === target) {
+            // Return consultant name
             return array[middle].name;
         }
 
-        // If the searching number is less then target element, 
-        // then we checking the middle element pointer
+        // If the middle role comes before the target alphabetically, search the right half of the array
         if (role < target)
             left = middle + 1;
+        // Else search the left half of the array
         else
             right = middle - 1;
     }
+    // Return message if no role was found
     return "Consultant is not found";
 };
 
 
-// Array of Roles
+// ===========================================================
+// 10. Consultant Roles
+// ===========================================================
+// This array must remain sorted alphabetically by role
 let roles = [
     {
         name: "Alice Johnson",
@@ -335,12 +370,14 @@ let roles = [
 ];
 
 
-// Prefilled Array of Tasks
+// ===========================================================
+// 11. Prefilled Tasks
+// ===========================================================
 let displayTasksTable = [
-    { taskName: "Meeting", priorityLevel: "Heigh", dueDate: "2026-11-01", consultant: "Accounts Clerk (Payable)", completed: false },
+    { taskName: "Meeting", priorityLevel: "High", dueDate: "2026-11-01", consultant: "Accounts Clerk (Payable)", completed: false },
     { taskName: "Draft of Requirements Report", priorityLevel: "High", dueDate: "2026-10-24", consultant: "Administration Assistant", completed: false },
     { taskName: "Update Headings style", priorityLevel: "Medium", dueDate: "2026-10-04", consultant: "Brand Coordinator", completed: false }
 ];
 
-// Initial Call on Page Load
+// Initial Call on the Page Load
 updateDisplay();
