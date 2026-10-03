@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasks</title>
     <link rel="stylesheet" href="css/style.css">
-
+    <!-- 
     <style>
         :root {
             --primary: hsl(193, 91%, 31%, 0.8);
@@ -210,10 +210,11 @@
             background-color: var(--charcoal);
             opacity: 0.5;
         }
-    </style>
+    </style> -->
 </head>
 
 <body>
+    <!-- Header -->
     <header>
         <!-- Logo -->
         <img src="images/GE_Logo-inline-on-white.png" alt="Gelos Enterprises Logo" class="logo">
@@ -242,7 +243,7 @@
 
                 <!-- Icon and Title -->
                 <div class="top-task">
-                    <img src="images/folder-plus-solid-full.svg" alt="Folder with plus icon" class="icon"></img>
+                    <img src="images/folder-plus-solid-full.svg" alt="Folder with plus icon" class="task-icon"></img>
                     <h3>Add New Task</h3>
                 </div>
 
@@ -261,7 +262,7 @@
                     <input type="date" name="dueDate" id="dueDate">
                     <label for="consultant">Consultant</label>
                     <select name="consultant" id="consultant">
-                        <option value="default" selected="selected">Please select an option</option>
+                        <option value="default" selected="selected">Select role</option>
                         <br>
                         <option value="Accounts Clerk">Accounts Clerk (Payable)</option>
                         <br>
@@ -293,7 +294,8 @@
 
                     <!-- Icon and Title -->
                     <div class="top-task">
-                        <img src="images/search-glass-solid-full.svg" class="icon" alt="Folder with plus icon"></img>
+                        <img src="images/search-glass-solid-full.svg" class="task-icon"
+                            alt="Folder with plus icon"></img>
                         <h3>Search Tasks</h3>
                     </div>
 
@@ -317,7 +319,7 @@
                 <div class="display-tasks">
                     <!-- Icon and Title -->
                     <div class="top-task">
-                        <img src="images/hamburger-menu.svg" class="icon" alt="Folder with plus icon"></img>
+                        <img src="images/hamburger-menu.svg" class="task-icon" alt="Folder with plus icon"></img>
                         <h3>Display Tasks</h3>
                     </div>
                     <!-- Table Container -->
@@ -346,7 +348,7 @@
 
     </main>
 
-
+    <!-- Footer -->
     <footer>
         <!-- Fotter Policy Links -->
         <ul>

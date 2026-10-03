@@ -1,17 +1,26 @@
 // ===========================================================
 // 1. Get HTML elements
 // ===========================================================
-// Form fields
+// Task Form fields
 let taskNameInput = document.getElementById("taskName");
 let priorityLevelInput = document.getElementById("priorityLevel");
 let dueDateInput = document.getElementById("dueDate");
 let consultantInput = document.getElementById("consultant");
 
-// Buttons and search elements
+// Contact Form Fields
+let firstNameInput = document.getElementById("firstName");
+let lastNameInput = document.getElementById("lastName");
+let emailInput = document.getElementById("email");
+let commentInput = document.getElementById("comment");
+let confirmationMessage = document.getElementById("confirmation");
+
+
+// Buttons and Search elements
 let btnAddNewTask = document.getElementById("btnAddNewTask");
 let searchInput = document.getElementById("search");
 let iconSearch = document.getElementById("iconSearch");
 let message = document.getElementById("message");
+let btnSendMessage = document.getElementById("btn-send");
 
 // Table body where task rows will be displayed
 let tasksTableBody = document.getElementById("tasksTableBody");
@@ -20,84 +29,88 @@ let tasksTableBody = document.getElementById("tasksTableBody");
 // ===========================================================
 // 2. Add Event Listener for the Add New Task button
 // ===========================================================
-btnAddNewTask.addEventListener("click", function () {
+if(btnAddNewTask){
+    btnAddNewTask.addEventListener("click", function () {
 
-    // Get values entered by the user
-    let taskName = taskNameInput.value.trim();
-    let priorityLevel = priorityLevelInput.value;
-    let dueDate = dueDateInput.value;
-    let consultant = consultantInput.value;
+        // Get values entered by the user
+        let taskName = taskNameInput.value.trim();
+        let priorityLevel = priorityLevelInput.value;
+        let dueDate = dueDateInput.value;
+        let consultant = consultantInput.value;
 
-    // Check that all required fields have been completed
-    if (!taskName || priorityLevel === "default" || !dueDate || consultant === "default") {
-        // Send Alert with the warning message
-        alert("Invalid input. Please complete required fields.");
-        // Function will stop if any input is invalid
-        return;
-    }
+        // Check that all required fields have been completed
+        if (!taskName || priorityLevel === "default" || !dueDate || consultant === "default") {
+            // Send Alert with the warning message
+            alert("Invalid input. Please complete required fields.");
+            // Function will stop if any input is invalid
+            return;
+        }
 
-    // Create a new task object
-    let newTask = { taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant, completed: false };
-    // Add the new task at the start of the tasks array
-    insertNewTask(displayTasksTable, 0, newTask);
+        // Create a new task object
+        let newTask = { taskName: taskName, priorityLevel: priorityLevel, dueDate: dueDate, consultant: consultant, completed: false };
+        // Add the new task at the start of the tasks array
+        insertNewTask(displayTasksTable, 0, newTask);
 
-    // Clear input fields after the new task is added
-    taskNameInput.value = "";
-    dueDateInput.value = "";
-    priorityLevelInput.value = "default";
-    consultantInput.value = "default";
+        // Clear input fields after the new task is added
+        taskNameInput.value = "";
+        dueDateInput.value = "";
+        priorityLevelInput.value = "default";
+        consultantInput.value = "default";
 
-    // Refresh the tasks table whith additional a new task 
-    updateDisplay();
-});
+        // Refresh the tasks table whith additional a new task 
+        updateDisplay();
+    });
+}
 
 
 
 // ==================================================================
 // 3. Add Event Listener for the Search of a Task by using Task Name
 // ==================================================================
-iconSearch.addEventListener("click", function(){
+if(iconSearch){
+    iconSearch.addEventListener("click", function(){
+        // Get the search value of user input and remove spaces
+        let search = searchInput.value.trim();
+        // Clear any previous messages
+        message.innerHTML = "";
+        
+        // Check if the user entered search criteria
+        if (!search) {
+            // Create warning message
+            let p = document.createElement("p");
+            p.innerText = "Please specify search criteria!";
 
-    // Get the search value of user input and remove spaces
-    let search = searchInput.value.trim();
-    // Clear any previous messages
-    message.innerHTML = "";
-    
-    // Check if the user entered search criteria
-    if (!search) {
-        // Create warning message
-        let p = document.createElement("p");
-        p.innerText = "Please specify search criteria!";
+            // Display message
+            message.appendChild(p);
+            // Stop the function: will not continue to the next process!
+            return;
+        }
 
-        // Display message
-        message.appendChild(p);
-        // Stop the function: will not continue to the next process!
-        return;
-    }
+        // Search the tasks array by task name
+        // The function returns the index of task if found, otherwise -1
+        let result = searchTask(displayTasksTable, search);
 
-    // Search the tasks array by task name
-    // The function returns the index of task if found, otherwise -1
-    let result = searchTask(displayTasksTable, search);
+        // Check if no task was found 
+        if (result === -1){
+            // Create error message
+            let p = document.createElement("p");
+            p.innerText = "Task not found.";
 
-    // Check if no task was found 
-    if (result === -1){
-        // Create error message
-        let p = document.createElement("p");
-        p.innerText = "Task not found.";
+            // Display error message
+            message.appendChild(p);
+            // Stop function: will not continue to the next process!
+            return;
+        }
+        // Display result of the function in consol
+        // console.log("Task found: ", result);
+        // Clear current tasks table content
+        tasksTableBody.innerHTML="";
 
-        // Display error message
-        message.appendChild(p);
-        // Stop function: will not continue to the next process!
-        return;
-    }
-    // Display result of the function in consol
-    // console.log("Task found: ", result);
-    // Clear current tasks table content
-    tasksTableBody.innerHTML="";
+        // Display only the task that was found
+        tasksTableBody.appendChild(createTaskRow(result));
+    });
+}
 
-    // Display only the task that was found
-    tasksTableBody.appendChild(createTaskRow(result));
-});
 
 
 // ===========================================================
@@ -331,7 +344,56 @@ function findConsultant(array, target) {
 
 
 // ===========================================================
-// 10. Consultant Roles
+// 10. Contact Form
+// ===========================================================
+/**
+ * Function send confirmation message to user.
+ * 
+ * @returns returns nothing if contact form has required fields empty
+ */
+function sendConfirmation(){
+    // Get values entered by the user
+    let firstName = firstNameInput.value.trim();
+    let lastName = lastNameInput.value.trim();
+    let email = emailInput.value.trim();
+    let comment = commentInput.value.trim();
+    
+    // Clear any previous messages
+    confirmationMessage.innerHTML = "";
+
+
+    // Check that all required fields have been completed
+    if (!firstName || !lastName || !email || !comment) {
+        // Send Alert with the warning message
+        alert("Missing required fields. Please complete required fields.");
+
+        // Function will stop if any input is invalid
+        return;
+    }
+
+    // Create error message
+    let p = document.createElement("p");
+    p.innerText = 
+    `Thank you for your message ${firstName},` + `we will aim to get back to you within the next 1-3 business days.`;
+
+    // Display error message
+    confirmationMessage.appendChild(p);
+
+    // Clear input fields after the new task is added
+    firstNameInput.value = "";
+    lastNameInput.value = "";
+    emailInput.value = "";
+    commentInput.value = "";
+}
+
+// Add Event Listener for the Send Message button at the Contact Form
+if(btnSendMessage){
+    btnSendMessage.addEventListener("click", sendConfirmation);
+}
+
+
+// ===========================================================
+// 12. Consultant Roles
 // ===========================================================
 // This array must remain sorted alphabetically by role
 let roles = [
@@ -371,7 +433,7 @@ let roles = [
 
 
 // ===========================================================
-// 11. Prefilled Tasks
+// 13. Prefilled Tasks
 // ===========================================================
 let displayTasksTable = [
     { taskName: "Meeting", priorityLevel: "High", dueDate: "2026-11-01", consultant: "Accounts Clerk (Payable)", completed: false },
